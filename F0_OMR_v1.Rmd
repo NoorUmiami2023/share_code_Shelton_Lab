@@ -1,0 +1,96 @@
+---
+title: "F0_OMR_new_structure"
+author: "MD IMRAN NOOR"
+date: "2023-11-26"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, echo=FALSE, include=FALSE}
+setwd("J:/PhD/Semester 1.2/4. Fall Lab 2023/lab_presentation_fall_2023/code")
+library(car)
+library(cowplot)
+library(Matrix)
+library(lme4)
+library(emmeans)
+library(multcomp)
+library(afex)
+library(tidyverse)
+```
+
+```{r}
+dir()
+omrf0 <- read.csv("omrf0_long.csv")
+omrf0$treatment <- as.factor(omrf0$treatment)
+omrf0$sex <- as.factor(omrf0$sex)
+omrf0$subject <- as.factor(omrf0$subject)
+omrf0$frequency <- as.factor(omrf0$frequency)
+glimpse(omrf0)
+```
+###############################################################
+#Model 1 = m1, where all but positive responses are 0, positive responses are 1
+#All but positive responses are 0, positive responses are 1, m1
+```{r}
+#Mixed model
+modelf0m1 <- glmer(responsem1 ~ treatment * sex + 
+                     (1|frequency/subject), data = omrf0, family = binomial(link = "logit"))
+summary(modelf0m1)
+```
+#All but positive responses are 0, positive responses are 1, m1
+```{r}
+#TukeyHSD on treatment
+tukey_resultsf0m1treatment <- (glht(modelf0m1, mcp(treatment="Tukey")))
+summary(tukey_resultsf0m1treatment)
+```
+#All but positive responses are 0, positive responses are 1, m1
+```{r}
+#TukeyHSD on sex
+tukey_resultsf0m1sex <- (glht(modelf0m1, mcp(sex="Tukey")))
+summary(tukey_resultsf0m1sex)
+```
+###############################################################
+#Model 2 = m2 where all but no response to 1, and no responses to to 0
+#All but no response are 1, and no responses are 0, m2
+```{r}
+#Mixed model 
+modelf0m2 <- glmer(responsem2 ~ treatment * sex + 
+                     (1|frequency/subject), data = omrf0, family = binomial(link = "logit"))
+summary(modelf0m2)
+```
+#All but no response are 1, and no responses are 0, m2
+```{r}
+#TukeyHSD on treatment
+tukey_resultsf0m2treatment <- (glht(modelf0m2, mcp(treatment="Tukey")))
+summary(tukey_resultsf0m2treatment)
+```
+#All but no response are 1, and no responses are 0, m2
+```{r}
+#TukeyHSD on sex
+tukey_resultsf0m2sex <- (glht(modelf0m2, mcp(sex="Tukey")))
+summary(tukey_resultsf0m2sex)
+```
+###############################################################
+#Model 3 = m3, where all but negative response are 1 and negative response are 0,
+#All but negative response are o 1 and negative response are 0, m3
+```{r}
+#Mixed model
+modelf0m3 <- glmer(responsem3 ~ treatment * sex + 
+                     (1|frequency/subject), data = omrf0, family = binomial(link = "logit"))
+summary(modelf0m3)
+```
+#All but negative response are o 1 and negative response are 0, m3
+```{r}
+#TukeyHSD on treatment
+tukey_resultsf0m3treatment <- (glht(modelf0m3, mcp(treatment="Tukey")))
+summary(tukey_resultsf0m3treatment)
+```
+#All but negative response are o 1 and negative response are 0, m3
+```{r}
+#TukeyHSD on sex
+tukey_resultsf0m3sex <- (glht(modelf0m3, mcp(sex="Tukey")))
+summary(tukey_resultsf0m3sex)
+```
+
